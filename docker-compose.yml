@@ -1,0 +1,25 @@
+#sources: https://github.com/stefanproell/jupyter-notebook-docker-compose/blob/master/docker-compose.yml
+#https://github.com/mediagis/nominatim-docker/blob/master/4.0/contrib/docker-compose.yml
+version:  '3'
+services:
+    datascience-notebook:
+        image:    jupyter/datascience-notebook
+        volumes:
+            - .:/home/jovyan/work
+        ports:
+            - "8888:8888"
+        container_name:   jupyter_notebook
+    nominatim:
+        container_name: nominatim
+        image: mediagis/nominatim:4.0
+        restart: always
+        ports:
+            - "8080:8080"
+        environment:
+            # see https://github.com/mediagis/nominatim-docker/tree/master/4.0#configuration for more options
+            PBF_URL: https://download.geofabrik.de/north-america/us-west-latest.osm.pbf
+            REPLICATION_URL: http://download.geofabrik.de/north-america/us-west-updates/
+            NOMINATIM_PASSWORD: very_secure_password
+        volumes:
+            - nominatim-data:/var/lib/postgresql/12/main
+        shm_size: 1gb
